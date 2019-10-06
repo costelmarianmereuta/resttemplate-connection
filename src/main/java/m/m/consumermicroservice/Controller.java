@@ -16,9 +16,18 @@ public class Controller {
     @GetMapping("/test")
     public String test(){
         RestTemplate restTemplate= new RestTemplate();
-        ResponseEntity<List<Role>> exchange = restTemplate.exchange("http://localhost:8080/roles/", HttpMethod.GET, null, new ParameterizedTypeReference<List<Role>>() {
+        ResponseEntity<List<Role>> exchange = restTemplate.exchange("http://localhost:8081/roles/", HttpMethod.GET, null, new ParameterizedTypeReference<List<Role>>() {
         });
         exchange.getBody();
-        return test();
+        return exchange.getBody().toString();
+    }
+
+    @GetMapping("/zuul")
+    public String callDbThroughZuul() {
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<List<Role>> exchange = restTemplate.exchange("http://localhost:8080/db/roles", HttpMethod.GET, null, new ParameterizedTypeReference<List<Role>>() {
+        });
+        exchange.getBody();
+        return exchange.getBody().toString();
     }
 }
